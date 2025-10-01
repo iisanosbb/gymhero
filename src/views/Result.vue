@@ -21,34 +21,62 @@
       <div class="score-section">
         <div class="score-box pixel-container">
           <div class="score-display">
-            <div class="score-number pixel-text">{{ score }}/10</div>
-            <div class="score-label pixel-text">正確題數</div>
+            <div class="score-number pixel-text">{{ score }}/40</div>
+            <div class="score-label pixel-text">總分</div>
           </div>
           <div class="percentage pixel-text">{{ percentage }}%</div>
         </div>
         
-        <!-- 等級評定 -->
-        <div class="grade-section">
-          <div class="grade-icon pixel-text">{{ gradeIcon }}</div>
-          <div class="grade-title pixel-text">{{ gradeTitle }}</div>
-          <div class="grade-description pixel-text">{{ gradeDescription }}</div>
+        <!-- 拼圖狀態卡 -->
+        <div class="puzzle-card pixel-container" :style="{ borderColor: puzzleState.color }">
+          <div class="puzzle-icon pixel-text">{{ puzzleState.icon }}</div>
+          <div class="puzzle-title pixel-text">{{ puzzleState.title }}</div>
+          <div class="puzzle-description pixel-text">{{ puzzleState.description }}</div>
+        </div>
+      </div>
+      
+      <!-- 拼圖狀態卡詳細內容 -->
+      <div class="puzzle-details">
+        <h3 class="section-title pixel-text">你的拼圖狀態卡</h3>
+        
+        <div class="puzzle-content pixel-container">
+          <div class="puzzle-section">
+            <h4 class="puzzle-subtitle pixel-text">你的描述</h4>
+            <p class="puzzle-text pixel-text">{{ puzzleCard.description }}</p>
+          </div>
+          
+          <div class="puzzle-section">
+            <h4 class="puzzle-subtitle pixel-text">關鍵任務</h4>
+            <p class="puzzle-text pixel-text">{{ puzzleCard.keyTask }}</p>
+          </div>
+          
+          <div class="puzzle-section">
+            <h4 class="puzzle-subtitle pixel-text">探索地圖</h4>
+            <p class="puzzle-text pixel-text">{{ puzzleCard.exploration }}</p>
+          </div>
+          
+          <div class="puzzle-section">
+            <h4 class="puzzle-subtitle pixel-text">遺落的拼圖</h4>
+            <p class="puzzle-text pixel-text">{{ puzzleCard.missingPiece }}</p>
+          </div>
+          
+          <div class="puzzle-quote pixel-container">
+            <p class="quote-text pixel-text">{{ puzzleCard.quote }}</p>
+          </div>
         </div>
       </div>
       
       <!-- 詳細結果 -->
       <div class="detailed-results">
-        <h3 class="section-title pixel-text">詳細結果</h3>
+        <h3 class="section-title pixel-text">各題得分</h3>
         <div class="results-grid">
           <div 
             v-for="(result, index) in detailedResults" 
             :key="index"
             class="result-item pixel-container"
-            :class="{ 'correct': result.correct, 'incorrect': !result.correct }"
           >
             <div class="question-number pixel-text">第{{ index + 1 }}題</div>
-            <div class="result-status pixel-text">
-              {{ result.correct ? '✓ 正確' : '✗ 錯誤' }}
-            </div>
+            <div class="result-score pixel-text">{{ result.score }}分</div>
           </div>
         </div>
       </div>
@@ -84,40 +112,73 @@ export default {
   },
   computed: {
     percentage() {
-      return Math.round((this.score / 10) * 100)
+      return Math.round((this.score / 40) * 100)
     },
-    gradeIcon() {
-      if (this.score >= 9) return '🏆'
-      if (this.score >= 7) return '🥇'
-      if (this.score >= 5) return '🥈'
-      if (this.score >= 3) return '🥉'
-      return '💪'
+    puzzleState() {
+      if (this.score >= 34) return {
+        icon: '🌊',
+        title: '節奏掌控者',
+        description: '健身已融入生活，懂得進退、自在享受過程',
+        color: '#4A90E2'
+      }
+      if (this.score >= 27) return {
+        icon: '🔥',
+        title: '自主實踐家',
+        description: '能獨立安排課表，也懂得調整與觀察自己',
+        color: '#F5A623'
+      }
+      if (this.score >= 19) return {
+        icon: '🔧',
+        title: '穩紮實打者',
+        description: '已有基礎課表與規律，開始學會應變',
+        color: '#7ED321'
+      }
+      return {
+        icon: '🌱',
+        title: '起點觀察者',
+        description: '還在熟悉動作、需要更多安全感與方向',
+        color: '#50E3C2'
+      }
     },
-    gradeTitle() {
-      if (this.score >= 9) return '健身大師'
-      if (this.score >= 7) return '健身專家'
-      if (this.score >= 5) return '健身愛好者'
-      if (this.score >= 3) return '健身新手'
-      return '健身初學者'
-    },
-    gradeDescription() {
-      if (this.score >= 9) return '你對健身知識瞭若指掌！'
-      if (this.score >= 7) return '你的健身知識很豐富！'
-      if (this.score >= 5) return '你有不錯的健身基礎！'
-      if (this.score >= 3) return '繼續學習，你會更強！'
-      return '加油，健身路上一起努力！'
+    puzzleCard() {
+      const state = this.puzzleState
+      const cards = {
+        '🌊': {
+          description: '你是健身界的節奏大師，能夠在挑戰與放鬆之間找到完美平衡。',
+          keyTask: '分享你的健身智慧，成為他人的引路人。',
+          exploration: '探索新的運動領域，如瑜伽、攀岩或舞蹈。',
+          missingPiece: '嘗試更多創新的訓練方式，保持新鮮感。',
+          quote: '「健身不是負擔，而是生活的節奏」'
+        },
+        '🔥': {
+          description: '你是自主的健身實踐者，擁有清晰的目標和執行力。',
+          keyTask: '挑戰更高難度的訓練，突破個人極限。',
+          exploration: '學習進階訓練技巧，如功能性訓練或競技運動。',
+          missingPiece: '培養更強的適應能力，面對不同挑戰。',
+          quote: '「自律是自由，堅持是力量」'
+        },
+        '🔧': {
+          description: '你是穩健的健身實踐者，正在建立穩固的基礎。',
+          keyTask: '制定更詳細的訓練計劃，提高執行效率。',
+          exploration: '學習更多基礎動作，建立完整的訓練體系。',
+          missingPiece: '培養更強的自主性和決策能力。',
+          quote: '「穩紮穩打，步步為營」'
+        },
+        '🌱': {
+          description: '你是健身路上的新手，充滿好奇心和學習熱忱。',
+          keyTask: '建立規律的健身習慣，從基礎動作開始。',
+          exploration: '多學習基礎知識，找到適合的訓練方式。',
+          missingPiece: '需要更多指導和鼓勵，建立信心。',
+          quote: '「每個專家都曾經是初學者」'
+        }
+      }
+      return cards[state.icon]
     },
     detailedResults() {
       return this.answers.map((answer, index) => ({
-        correct: answer.correct,
+        score: answer.score,
         questionNumber: index + 1
       }))
-    },
-    encouragementMessage() {
-      if (this.score >= 8) return '太棒了！你已經是真正的健身房英雄！'
-      if (this.score >= 6) return '表現不錯！繼續努力成為健身專家！'
-      if (this.score >= 4) return '不錯的開始！多練習會更進步！'
-      return '沒關係！每次學習都是進步，加油！'
     }
   },
   mounted() {
@@ -127,7 +188,7 @@ export default {
     loadResults() {
       const savedAnswers = JSON.parse(localStorage.getItem('quizAnswers') || '[]')
       this.answers = savedAnswers
-      this.score = savedAnswers.filter(answer => answer.correct).length
+      this.score = savedAnswers.reduce((total, answer) => total + (answer.score || 0), 0)
     },
     restartQuiz() {
       localStorage.removeItem('quizAnswers')
@@ -274,29 +335,77 @@ export default {
   font-weight: bold;
 }
 
-/* 等級評定 */
-.grade-section {
-  background: #654321;
-  color: white;
+/* 拼圖狀態卡 */
+.puzzle-card {
+  background: white;
+  color: #8B4513;
   padding: 25px;
   text-align: center;
-  border: 3px solid #8B4513;
+  border: 3px solid;
+  margin-top: 20px;
 }
 
-.grade-icon {
+.puzzle-icon {
   font-size: 48px;
   margin-bottom: 10px;
 }
 
-.grade-title {
+.puzzle-title {
   font-size: 24px;
   margin-bottom: 10px;
-  color: white;
+  color: #8B4513;
+  font-weight: bold;
 }
 
-.grade-description {
+.puzzle-description {
   font-size: 16px;
+  color: #8B4513;
+}
+
+/* 拼圖詳細內容 */
+.puzzle-details {
+  margin-bottom: 30px;
+}
+
+.puzzle-content {
+  background: white;
+  border: 3px solid #654321;
+  padding: 25px;
+  margin-top: 15px;
+}
+
+.puzzle-section {
+  margin-bottom: 20px;
+}
+
+.puzzle-subtitle {
+  color: #8B4513;
+  font-size: 18px;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.puzzle-text {
+  color: #8B4513;
+  font-size: 16px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.puzzle-quote {
+  background: #654321;
+  color: white;
+  padding: 20px;
+  text-align: center;
+  margin-top: 20px;
+  border: 3px solid #8B4513;
+}
+
+.quote-text {
+  font-size: 18px;
+  font-style: italic;
   color: #ffb366;
+  margin: 0;
 }
 
 /* 詳細結果 */
@@ -324,33 +433,16 @@ export default {
   text-align: center;
 }
 
-.result-item.correct {
-  background: #E8F5E8;
-  border-color: #4CAF50;
-}
-
-.result-item.incorrect {
-  background: #FFEBEE;
-  border-color: #F44336;
-}
-
 .question-number {
   font-size: 14px;
   color: #8B4513;
   margin-bottom: 5px;
 }
 
-.result-status {
-  font-size: 12px;
+.result-score {
+  font-size: 16px;
   font-weight: bold;
-}
-
-.result-item.correct .result-status {
-  color: #4CAF50;
-}
-
-.result-item.incorrect .result-status {
-  color: #F44336;
+  color: #8B4513;
 }
 
 /* 操作按鈕 */

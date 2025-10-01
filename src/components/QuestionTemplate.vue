@@ -115,13 +115,13 @@ export default {
     },
     checkAnswer() {
       this.showResult = true
-      this.isCorrect = this.selectedAnswer === this.questionData.correctAnswer
+      const score = this.questionData.scores[this.selectedAnswer]
       
       // 保存答案到localStorage
       const answers = JSON.parse(localStorage.getItem('quizAnswers') || '[]')
       answers[this.questionNumber - 1] = {
         selected: this.selectedAnswer,
-        correct: this.isCorrect
+        score: score
       }
       localStorage.setItem('quizAnswers', JSON.stringify(answers))
     },
