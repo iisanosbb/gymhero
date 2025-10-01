@@ -1,6 +1,6 @@
 {
   "name": "gym-hero-quiz",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "健身房英雄問答遊戲",
   "main": "index.js",
   "scripts": {
